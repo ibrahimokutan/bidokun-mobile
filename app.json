@@ -1,18 +1,19 @@
 {
   "expo": {
-    "name": "bidokun-mobile",
-    "slug": "bidokun-mobile",
+    "name": "bidokun",
+    "slug": "bidokun",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "bidokunmobile",
+    "scheme": "bidokun",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bidokun"
     },
     "android": {
-      "package": "com.bitrust.bidokun",
+      "package": "com.bidokun",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -49,6 +50,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "eaf68a89-d6c1-42c5-9640-1dfa14281973"
+      }
+    },
+    "owner": "ibrahimokutan"
   }
 }
