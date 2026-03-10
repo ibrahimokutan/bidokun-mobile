@@ -39,6 +39,7 @@ export default function HomeScreen() {
                 searchValue={search}
                 onSearchChange={setSearch}
                 onScannerPress={handleScannerPress}
+                showScanner={canAddCard}
             />
 
             {/* main: flex-1 px-4 py-6 space-y-4 pb-24 */}

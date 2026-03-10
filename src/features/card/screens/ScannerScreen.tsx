@@ -1,4 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { HttpError } from '@src/shared/services/httpClient';
 import { fetchVCardFromUrl } from '@src/shared/services/vcardService';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
@@ -75,7 +76,13 @@ export default function ScannerScreen() {
                 ]
             );
         } catch (error) {
-            Alert.alert('Hata', error instanceof Error ? error.message : 'Kart bulunamadı. Kullanıcı adını kontrol edin.');
+            const message =
+                error instanceof HttpError && error.status === 404
+                    ? 'Bu QR koda ait kart bulunamadı. Kartın var olduğundan emin olun.'
+                    : error instanceof Error
+                        ? error.message
+                        : 'Bir hata oluştu. Lütfen tekrar deneyin.';
+            Alert.alert('Kart Bulunamadı', message);
             setScanned(false);
         } finally {
             setLoading(false);

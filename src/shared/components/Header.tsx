@@ -15,9 +15,10 @@ interface HeaderProps {
     searchValue: string;
     onSearchChange: (text: string) => void;
     onScannerPress?: () => void;
+    showScanner?: boolean;
 }
 
-export function Header({ searchValue, onSearchChange, onScannerPress }: HeaderProps) {
+export function Header({ searchValue, onSearchChange, onScannerPress, showScanner = true }: HeaderProps) {
     const [isFocused, setIsFocused] = useState(false);
 
     // HTML has pt-12 (48px)
@@ -27,9 +28,11 @@ export function Header({ searchValue, onSearchChange, onScannerPress }: HeaderPr
         <View style={[styles.container, { paddingTop }]}>
             <View style={styles.topRow}>
                 <Text style={styles.logo}>bidokun</Text>
-                <TouchableOpacity style={styles.btnIcon} onPress={onScannerPress}>
-                    <MaterialIcons name="qr-code-scanner" size={24} color="#64748b" />
-                </TouchableOpacity>
+                {showScanner && (
+                    <TouchableOpacity style={styles.btnIcon} onPress={onScannerPress}>
+                        <MaterialIcons name="qr-code-scanner" size={24} color="#64748b" />
+                    </TouchableOpacity>
+                )}
             </View>
 
             <View style={styles.searchContainer}>
