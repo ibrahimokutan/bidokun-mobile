@@ -4,7 +4,7 @@ import { httpClient } from './httpClient';
 
 /**
  * API response'u doğru şekilde parse eder.
- * vcard_data, raw.data'nın içinde bulunur.
+ * vcard_data ve company, raw.data'nın içinde bulunur.
  */
 function parseApiResponse(raw: ApiVCardResponse, type: VCard['type']): VCard {
     const vcardData = raw.data.vcard_data;
@@ -17,6 +17,8 @@ function parseApiResponse(raw: ApiVCardResponse, type: VCard['type']): VCard {
         id: raw.data.id,
         username: raw.data.slug,
         type,
+        // Kurumsal kartlarda company.slug doğrudan API'den okunur
+        ...(raw.data.company ? { companySlug: raw.data.company.slug } : {}),
         personal_info: {
             first_name: vcardData.personal_info.first_name,
             last_name: vcardData.personal_info.last_name,

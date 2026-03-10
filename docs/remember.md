@@ -67,7 +67,7 @@
 ### iOS — QR Paylaşım
 - HCE desteklenmez (Apple kısıtlaması).
 - Karta tıklandığında QR kod ekranı açılır.
-- QR, kart URL'ini encode eder.
+- QR, kart URL'ini (`https://app.bidokun.com/...`) encode eder.
 - `expo-sharing` ile paylaşılabilir.
 
 ### QR Fallback Kuralı (Evrensel)
@@ -142,4 +142,4 @@ src/
 
 ---
 
-> Son güncelleme: Mart 2026 | Bitrust — bidokun projesi
+> Son güncelleme: Mart 2026 | Bitrust — bidokun projesi | Kart URL'leri app.bidokun.com subdomainine taşındı.

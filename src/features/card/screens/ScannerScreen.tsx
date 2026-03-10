@@ -43,10 +43,12 @@ export default function ScannerScreen() {
         setLoading(true);
 
         try {
-            // URL doğrula ve kartı çek
-            // bi/ ve company/slug yapısını kontrol et
-            if (!data.includes('/bi/') && data.split('/').filter(Boolean).length < 2) {
-                throw new Error('Geçersiz bidokun QR kodu veya kullanıcı adı.');
+            // app.bidokun.com domain ve path yapısını doğrula
+            const isValidBidokunUrl =
+                data.startsWith('https://app.bidokun.com/') &&
+                (data.includes('/bi/') || data.split('/').filter(Boolean).length >= 4);
+            if (!isValidBidokunUrl) {
+                throw new Error('Geçersiz bidokun QR kodu. Lütfen bidokun kartı QR kodunu okutun.');
             }
 
             const card = await fetchVCardFromUrl(data);

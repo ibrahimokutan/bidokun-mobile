@@ -10,6 +10,8 @@ export interface VCard {
     id: number;
     username: string;
     type: CardType;
+    /** Kurumsal kartlarda şirket slug'ı (ör. 'bidokun'). Bireysel kartlarda undefined. */
+    companySlug?: string;
     personal_info: PersonalInfo;
 }
 
@@ -19,9 +21,12 @@ export interface VCard {
  *   "success": true,
  *   "data": {
  *     "id": 1,
- *     "slug": "...",
- *     "vcard_data": {           <-- vcard_data, data'nın İÇİNDE
- *       "personal_info": { ... }
+ *     "slug": "ibrahimokutan",
+ *     "vcard_data": { "personal_info": { ... } },
+ *     "company": {              <-- Kurumsal kartlarda mevcut
+ *       "id": 1,
+ *       "name": "bidokun",
+ *       "slug": "bidokun"
  *     }
  *   }
  * }
@@ -33,6 +38,11 @@ export interface ApiVCardResponse {
         slug: string;
         vcard_data: {
             personal_info: PersonalInfo;
+        };
+        company?: {
+            id: number;
+            name: string;
+            slug: string;
         };
     };
 }

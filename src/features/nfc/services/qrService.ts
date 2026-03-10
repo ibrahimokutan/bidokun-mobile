@@ -1,21 +1,23 @@
 import { Platform } from 'react-native';
 import type { VCard } from '../../../shared/types';
 
+/** Bireysel ve kurumsal kartvizit profil sayfalarının subdomain adresi */
+const CARD_BASE_URL = 'https://app.bidokun.com';
+
 /**
  * Kart tipine göre QR kodun yönlendireceği URL'i üretir.
  * Bu URL, kartın halka açık profil sayfasıdır.
- * 
+ *
  * Yapı:
- * Bireysel: https://bidokun.com/bi/{username}
- * Kurumsal: https://bidokun.com/bidokun/{username}
+ * Bireysel: https://app.bidokun.com/bi/{username}
+ * Kurumsal: https://app.bidokun.com/{companySlug}/{username}
  */
 export function generateQrUrl(card: VCard): string {
-    const baseUrl = 'https://bidokun.com';
     if (card.type === 'kurumsal') {
-        // Kurumsal kartlarda varsayılan olarak 'bidokun' kullanıyoruz
-        return `${baseUrl}/bidokun/${card.username}`;
+        const slug = card.companySlug ?? 'unknown';
+        return `${CARD_BASE_URL}/${slug}/${card.username}`;
     }
-    return `${baseUrl}/bi/${card.username}`;
+    return `${CARD_BASE_URL}/bi/${card.username}`;
 }
 
 /**

@@ -29,38 +29,55 @@ export default function AddCardScreen() {
     const { canAddCard, saveCard } = useCardStore();
 
     const [cardType, setCardType] = useState<CardType>('kurumsal');
+    const [companyUsername, setCompanyUsername] = useState('');
     const [username, setUsername] = useState('');
     const [preview, setPreview] = useState<VCard | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
+    const isCorporate = cardType === 'kurumsal';
+
+    const resetForm = () => {
+        setPreview(null);
+        setErrorMsg('');
+        setUsername('');
+        setCompanyUsername('');
+    };
+
     const handleFetch = useCallback(async () => {
         const trimmedUsername = username.trim();
+        const trimmedCompany = companyUsername.trim();
+
         if (!trimmedUsername) {
             setErrorMsg('Kullanıcı adı alanı boş olamaz.');
             return;
         }
+        if (isCorporate && !trimmedCompany) {
+            setErrorMsg('Şirket kullanıcı adı alanı boş olamaz.');
+            return;
+        }
+
         setIsLoading(true);
         setErrorMsg('');
         setPreview(null);
         try {
-            const card =
-                cardType === 'kurumsal'
-                    ? await fetchCorporateCard('bidokun', trimmedUsername)
-                    : await fetchPersonalCard(trimmedUsername);
+            const card = isCorporate
+                ? await fetchCorporateCard(trimmedCompany, trimmedUsername)
+                : await fetchPersonalCard(trimmedUsername);
             setPreview(card);
         } catch {
             setErrorMsg('Kart bulunamadı. Kullanıcı adını kontrol edip tekrar deneyin.');
         } finally {
             setIsLoading(false);
         }
-    }, [username, cardType]);
+    }, [username, companyUsername, isCorporate]);
 
     const handleSave = useCallback(async () => {
         if (!preview) return;
         await saveCard(preview);
         router.replace('/');
     }, [preview, saveCard, router]);
+
 
     if (!canAddCard) {
         return (
@@ -96,7 +113,7 @@ export default function AddCardScreen() {
                             return (
                                 <Pressable
                                     key={value}
-                                    onPress={() => { setCardType(value); setPreview(null); setErrorMsg(''); setUsername(''); }}
+                                    onPress={() => { setCardType(value); resetForm(); }}
                                     style={[styles.typeBtn, isSelected && styles.typeBtnSelected]}
                                 >
                                     <MaterialIcons
@@ -112,11 +129,29 @@ export default function AddCardScreen() {
                         })}
                     </View>
 
-                    {/* Username Input */}
+                    {/* Şirket Kullanıcı Adı — sadece kurumsal tipinde */}
+                    {isCorporate && (
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.inputLabel}>ŞİRKET KULLANICI ADI</Text>
+                            <View style={[styles.inputWrapper, !!errorMsg && styles.inputError]}>
+                                <MaterialIcons name="business" size={20} color="#94a3b8" />
+                                <TextInput
+                                    value={companyUsername}
+                                    onChangeText={(t) => { setCompanyUsername(t); setErrorMsg(''); setPreview(null); }}
+                                    placeholder="bidokun"
+                                    placeholderTextColor="#94a3b8"
+                                    autoCapitalize="none"
+                                    style={styles.textInput}
+                                />
+                            </View>
+                        </View>
+                    )}
+
+                    {/* Kişisel Kullanıcı Adı */}
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputLabel}>KART KULLANICI ADI</Text>
                         <View style={[styles.inputWrapper, !!errorMsg && styles.inputError]}>
-                            <MaterialIcons name="link" size={20} color="#94a3b8" />
+                            <MaterialIcons name="person-outline" size={20} color="#94a3b8" />
                             <TextInput
                                 value={username}
                                 onChangeText={(t) => { setUsername(t); setErrorMsg(''); setPreview(null); }}
@@ -155,7 +190,7 @@ export default function AddCardScreen() {
                     )}
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
